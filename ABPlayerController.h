@@ -17,4 +17,7 @@ class BOOKSTUDY_API AABPlayerController : public APlayerController
 public:
 	virtual void PostInitializeComponents() override;
 	virtual void OnPossess(APawn* aPawn) override;
+
+protected:
+	virtual void BeginPlay() override; //UI 를 배제하고 게임에만 입력 신호가 전달되게 하기위해 (?) 선언
 };

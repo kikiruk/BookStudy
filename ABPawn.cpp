@@ -35,6 +35,21 @@ AABPawn::AABPawn()
 	{
 		Mesh->SetSkeletalMesh(SK_CARDBOARD.Object);
 	}
+
+	/***************************애니메이션 설정 파트***********************************/
+	Mesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);					//에니메이션 모드 설정.
+
+	static ConstructorHelpers::FClassFinder<UAnimInstance> WARRIOR_ANIM(
+		TEXT("/Game/Book/Animations/WarriorAnimBlueprint.WarriorAnimBlueprint_C") // 마지막에 _C를 붙여줬다.
+		//블루프린트 를 생성하면 컴퓨터는 인스턴스를 생성해서 관리하는데 그 생성된 인스턴스가 _C 가 붙기때문에 그런듯하다.
+	);
+
+	if (WARRIOR_ANIM.Succeeded())
+	{
+		Mesh->SetAnimInstanceClass(WARRIOR_ANIM.Class);
+	}
+
+	/*********************************************************************************/
 }
 
 // Called when the game starts or when spawned
@@ -42,6 +57,14 @@ void AABPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	/***C++ 코드로 애니메이션을 설정하는걸 보여준 예제코드.****/
+	//Mesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+	//UAnimationAsset* AnimAsset = LoadObject<UAnimationAsset>(nullptr, TEXT("/Game/Book/Animations/WarriorRun.WarriorRun"));
+	//
+	//if (AnimAsset != nullptr)
+	//{
+	//	Mesh->PlayAnimation(AnimAsset, true);
+	//}
 }
 
 // Called every frame
@@ -74,11 +97,13 @@ void AABPawn::PossessedBy(AController * NewController)
 
 void AABPawn::UpDown(float NewAxisValue)
 {
-	ABLOG(Warning, TEXT("%f"), NewAxisValue);
+	//ABLOG(Warning, TEXT("%f"), NewAxisValue);
+	AddMovementInput(GetActorForwardVector(), NewAxisValue);
 }
 
 void AABPawn::LeftRight(float NewAxisValue)
 {
-	ABLOG(Warning, TEXT("%f"), NewAxisValue);
+	//ABLOG(Warning, TEXT("%f"), NewAxisValue);
+	AddMovementInput(GetActorRightVector(), NewAxisValue);
 }
 
